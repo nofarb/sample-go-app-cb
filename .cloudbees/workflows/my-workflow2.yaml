@@ -1,0 +1,54 @@
+apiVersion: automation.cloudbees.io/v1alpha1
+kind: workflow
+name: My workflow
+on:
+  workflow_dispatch: null
+  pull_request:
+    branches:
+      - main
+metadata:
+  stages/v1alpha1:
+    - name: Stage 1
+      jobs:
+        - job1
+        - AAA
+    - name: Stage
+      jobs:
+        - job
+        - fff
+jobs:
+  job1:
+    steps:
+      - run: echo "hello world"
+        uses: docker://golang:1.20.3-alpine3.17
+        name: Hello world
+        shell: sh
+  AAA:
+    needs: job1
+    steps:
+      - with:
+          bucket-name: ddd
+          file-path: ddd
+          s3-path: ddd
+        uses: cloudbees-io/s3-download-object@v1
+      - with:
+          bucket-name: ww
+          file-path: www
+          s3-path: www
+        uses: cloudbees-io/s3-download-object@v1
+        name: "33333"
+  job:
+    needs: AAA
+    steps:
+      - name: Say hello
+        uses: docker://golang:1.20.3-alpine3.17
+        shell: sh
+        run: echo "hello world"
+  fff:
+    needs:
+      - job
+    timeout-minutes: 4320
+    delegates: cloudbees-io/manual-approval/custom-job.yml@v1
+    with:
+      disallowLaunchByUser: false
+      notifyAllEligibleUsers: false
