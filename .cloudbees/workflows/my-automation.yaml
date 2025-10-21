@@ -7,17 +7,25 @@ on:
       - "**"
   workflow_dispatch:
 jobs:
-  build:
+  build33333:
     steps:
-      - uses: docker://golang:1.20.3-alpine3.17
-        name: Say hello
+      - name: Say hello
+        uses: docker://golang:1.20.3-alpine3.17
         shell: sh
         run: |
           echo "hello world"
-      - uses: docker://golang:1.20.3-alpine3.17
-        name: scan kind
+      - name: scan kind
         kind: scan
+        uses: docker://golang:1.20.3-alpine3.17
         run: echo hello
+      - name: test1
+        kind: build
+        uses: cloudbees-io/s3-download-object@v1
+        with:
+          bucket-name: dddd
+          file-path: ssss
+          s3-path: ssss
+    needs: ci-job
   ci-job:
     steps:
       - uses: docker://alpine/git:latest
